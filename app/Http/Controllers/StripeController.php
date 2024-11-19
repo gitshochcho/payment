@@ -55,10 +55,9 @@ class StripeController extends Controller
 
     public function checkout()
     {
-        $productDetail = "Id_for_product_or_anything_else_0000111222555";
         $stripe = new \Stripe\StripeClient('sk_test_51KOFikFc0lmoA84nRjf7U2V8RPgslalbjNQ8iFbV2kXDBhn5jlhAhQRlJMmPVxq4cDjVLl3L4Vlgd0dzG0Pw4bVp00pagMFqJh');
         $checkoutSession = $stripe->checkout->sessions->create([
-            'success_url' => route('success-url',['product_id' => $productDetail]),
+            'success_url' => route('success-url'). '?session_id={CHECKOUT_SESSION_ID}',
             'cancel_url' => route('fail-url'),
             'line_items' => [
                 [
@@ -80,10 +79,17 @@ class StripeController extends Controller
 
     public function success(Request $request)
     {
-        $productId = $request->query('product_id');
+        $productId = $request->query('session_id');
         $subscription = null;
         $checkout = "success";
-        return view('welcome',compact('subscription','checkout','productId'));
+
+        $stripe = new \Stripe\StripeClient('sk_test_51KOFikFc0lmoA84nRjf7U2V8RPgslalbjNQ8iFbV2kXDBhn5jlhAhQRlJMmPVxq4cDjVLl3L4Vlgd0dzG0Pw4bVp00pagMFqJh');
+        $checkoutSession = $stripe->checkout->sessions->retrieve($productId, []);
+
+    // Access session details
+        $transactionId = $checkoutSession->payment_intent;
+        $customerDetails = $checkoutSession->customer_details;
+        return view('welcome',compact('subscription','checkout','transactionId','customerDetails'));
     }
 
     public function fail(Request $request)

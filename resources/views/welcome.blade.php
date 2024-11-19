@@ -78,8 +78,14 @@
                         @if ($checkout == 'success')
                         <h1>
                             <span class="badge bg-success">Checkout Successfull</span>
-                            <span class="badge bg-success">success Product Detail: {{ $productId }} </span>
+
                         </h1>
+                        <div>
+                            <p>Transaction ID: {{ $transactionId }}</p>
+
+                            <h2>Stripe Checkout Session Object</h2>
+                            <pre>{{ print_r($customerDetails, true) }}</pre>
+                        </div>
                         @elseif ($checkout == 'fail')
                         <h1>
                             <span class="badge bg-danger">Checkout Failed</span>
