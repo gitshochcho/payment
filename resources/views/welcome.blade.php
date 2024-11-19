@@ -78,6 +78,7 @@
                         @if ($checkout == 'success')
                         <h1>
                             <span class="badge bg-success">Checkout Successfull</span>
+                            <span class="badge bg-success">success Product Detail: {{ $productId }} </span>
                         </h1>
                         @elseif ($checkout == 'fail')
                         <h1>
